@@ -1,5 +1,6 @@
 package advanceddb2;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class MainClass {
 	 * 3 - Coverage Threshold
 	 * 4 - Website Domain
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if(args != null && args.length >= 4) {
 			
 			// Assign arguments to corresponding variables
@@ -30,6 +31,9 @@ public class MainClass {
 			website = args[3];
 			
 			queries = new Queries();
+			
+			BingSearch search = new BingSearch();
+			search.getResults(bingAccountKey, website, "premiership");
 			
 			
 		} else {

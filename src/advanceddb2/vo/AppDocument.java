@@ -1,4 +1,4 @@
-package edu.columbia.advancedb.bing.vo;
+package advanceddb2.vo;
 
 public class AppDocument {
 	private String url;

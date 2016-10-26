@@ -19,16 +19,15 @@ import advanceddb2.vo.AppDocument;
  */
 public class BingSearch {
 
-	public static String BING_URL = "https://api.datamarket.azure.com/Bing/Search/Web";
-	public static String EXTRA_PARAMS = "$top=10&$format=JSON";
+	public static String BING_URL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Composite?Query=%27site%3a";
+	public static String EXTRA_PARAMS = "%27&$top=10&$format=JSON";
 	
-	public List<AppDocument> getResults(String accountKey, List<String> queries) throws IOException {
+	public List<AppDocument> getResults(String accountKey, String site, String searchQuery) throws IOException {
 		
-		String searchText = MainClass.listToKeyWords(queries);
-        searchText = searchText.replaceAll(" ", "%20");
+		searchQuery = searchQuery.replaceAll(" ", "%20");
 		
 		List<AppDocument> docs = new ArrayList<AppDocument>();
-		String query=BING_URL + "?Query=%27" + searchText + "%27&" + EXTRA_PARAMS;
+		String query=BING_URL + site + "%20" + searchQuery + EXTRA_PARAMS;
 		
 		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
 		String accountKeyEnc = new String(accountKeyBytes);
@@ -47,7 +46,9 @@ public class BingSearch {
             }
             final JSONObject json = new JSONObject(response.toString());
             final JSONObject d = json.getJSONObject("d");
-            final JSONArray results = d.getJSONArray("results");
+            final JSONObject resultObj = d.getJSONArray("results").getJSONObject(0);
+            String webCount  = (String) resultObj.get("WebTotal");
+            final JSONArray results = resultObj.getJSONArray("Web");
             final int resultsLength = results.length();
             for (int i = 0; i < resultsLength; i++) {
                 final JSONObject aResult = results.getJSONObject(i);
