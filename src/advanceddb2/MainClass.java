@@ -1,5 +1,8 @@
 package advanceddb2;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainClass {
 	
 	public static float tEs;
@@ -33,6 +36,26 @@ public class MainClass {
 			System.out.println("Invalid number of arguments");
 			System.exit(1);
 		}
+	}
+	
+	/*
+	 * Utility method to convert Key Words String to Array List in order.
+	 */
+	private static List<String> keyWordsToList(String keyWords) {
+		String[] keys = keyWords.split(" ");
+		List<String> wordList = Arrays.asList(keys);  
+		return wordList;
+	}
+	
+	/*
+	 * Utility method to convert List of key words back to String.
+	 */
+	public static String listToKeyWords(List<String> keyWords) {
+		String keys = "";
+		for(String key: keyWords) {
+			keys = keys + key.toLowerCase() + " ";
+		}
+		return keys.trim();
 	}
 
 }
