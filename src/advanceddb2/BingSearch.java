@@ -20,7 +20,7 @@ import advanceddb2.vo.AppDocument;
 public class BingSearch {
 
 	public static String BING_URL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Composite?Query=%27site%3a";
-	public static String EXTRA_PARAMS = "%27&$top=10&$format=JSON";
+	public static String EXTRA_PARAMS = "%27&$top=4&$format=JSON";
 	
 	public List<AppDocument> getResults(String accountKey, String site, String searchQuery) throws IOException {
 		
@@ -58,6 +58,48 @@ public class BingSearch {
                 doc.setTitle((String) aResult.get("Title"));
                 doc.setDescription((String) aResult.get("Description"));
                 
+                docs.add(doc);
+            }
+        }
+		catch(Exception ex) {
+			// Catch exception
+			System.out.println("Sorry. An unexpected error occurred while sending request to Bing");
+		}
+		
+		return docs;
+	}
+	
+	public List<AppDocument> getTop4Results(String accountKey, String site, String searchQuery) throws IOException {
+		
+		searchQuery = searchQuery.replaceAll(" ", "%20");
+		
+		List<AppDocument> docs = new ArrayList<AppDocument>();
+		String query=BING_URL + site + "%20" + searchQuery + EXTRA_PARAMS;
+		
+		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
+		String accountKeyEnc = new String(accountKeyBytes);
+
+		System.out.println("Bing web query: " + query);
+		URL url = new URL(query);
+		URLConnection urlConnection = url.openConnection();
+		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
+		final BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));		
+		try 
+		{
+            String inputLine;
+            final StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            final JSONObject json = new JSONObject(response.toString());
+            final JSONObject d = json.getJSONObject("d");
+            final JSONObject resultObj = d.getJSONArray("results").getJSONObject(0);
+            final JSONArray results = resultObj.getJSONArray("Web");
+            final int resultsLength = results.length();
+            for (int i = 0; i < resultsLength; i++) {
+                final JSONObject aResult = results.getJSONObject(i);
+                AppDocument doc = new AppDocument();
+                doc.setUrl((String) aResult.get("Url"));
                 docs.add(doc);
             }
         }
