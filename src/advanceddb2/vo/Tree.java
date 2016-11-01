@@ -45,6 +45,15 @@ public class Tree<T> {
         public Node<T> getParent() {
                return parent;
         }
+        public boolean hasChildren() {
+            int countChildren = children.size();
+            if(countChildren > 0){
+            	return true;
+            }
+            else{
+            	return false;
+            }
+        }
     }
    
     public Node<T> getNode() {
