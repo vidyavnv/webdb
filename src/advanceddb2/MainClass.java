@@ -47,6 +47,10 @@ public class MainClass {
              populateTree();
             
              //Part 1
+             DatabaseClassifier dbClassifier = new DatabaseClassifier();
+             String path = "";
+             String category = dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path);
+             System.out.println(category);
             
              //Part 2
              List<Node<String>> classification = new ArrayList<Node<String>>();
@@ -87,7 +91,7 @@ public class MainClass {
    /*
    * Utility method to convert Key Words String to Array List in order.
    */
-   private static List<String> keyWordsToList(String keyWords) {
+   public static List<String> keyWordsToList(String keyWords) {
           String[] keys = keyWords.split(" ");
           List<String> wordList = Arrays.asList(keys); 
           return wordList;
