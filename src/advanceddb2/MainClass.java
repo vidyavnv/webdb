@@ -46,10 +46,12 @@ public class MainClass {
              queries = new Queries();
              populateTree();
             
+             Map<String, Integer> cache = new HashMap<String, Integer>();
+             
              //Part 1
              DatabaseClassifier dbClassifier = new DatabaseClassifier();
              String path = "";
-             String category = dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path);
+             String category = dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache);
              System.out.println(category);
             
              //Part 2

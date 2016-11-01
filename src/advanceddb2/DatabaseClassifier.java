@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import advanceddb2.vo.AppDocument;
 import advanceddb2.vo.Tree.Node;
 
 public class DatabaseClassifier { 
 	
-	public String qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path) throws IOException{
+	public String qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache) throws IOException{
 				
 		BingSearch search = new BingSearch();
-        
+		int hits;
 		List<Node<String>> categories;
 		// Get queries for the current node
 		List<String> allQueries = getQueries(node.getName());
@@ -31,10 +32,18 @@ public class DatabaseClassifier {
 			// Join query list to form a string
 			String finalQuery = MainClass.listToKeyWords(trimQuery);
 			System.out.println("Query is - " + finalQuery);
-			// Run Bing Search
-			List<AppDocument> docs = search.getResults(MainClass.bingAccountKey, MainClass.website, finalQuery);
-			// Get count of documents fetched from Bing API
-			int hits = docs.size();
+			// Check cache
+			boolean valExists = cache.containsKey(finalQuery);
+			if(valExists){
+				hits = cache.get(finalQuery);
+			}
+			else{
+				// Run Bing Search
+				List<AppDocument> docs = search.getResults(MainClass.bingAccountKey, MainClass.website, finalQuery);
+				// Get count of documents fetched from Bing API
+				hits = docs.size();
+				cache.put(finalQuery, hits);
+			}
 			System.out.println("hits are " + hits);
 			// Calculate coverage for each category
 			for(int j = 0;j<categories.size();j++){
@@ -70,7 +79,7 @@ public class DatabaseClassifier {
 		for(int j=0;j<categories.size();j++){
 			if(coverage.get(j) > (int)tEc && specificity.get(j) > tEs){
 				if(categories.get(j).hasChildren()){
-					return qProber(url, tEc, tEs, categories.get(j),accountKey, path);
+					return qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache);
 				}
 				else{
 					return path + "->" + categories.get(j).getName();
