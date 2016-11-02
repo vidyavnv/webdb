@@ -77,6 +77,7 @@ public class DatabaseClassifier {
 		
 		// Recurse if coverage and specificity are above threshold
 		path = path + "->" + node.getName();
+		// Checks if sub category satisfies the threshold conditions
 		boolean isCat = false;
 		for(int j=0;j<categories.size();j++){
 			if(coverage.get(j) > (int)tEc && specificity.get(j) > tEs){
@@ -85,10 +86,12 @@ public class DatabaseClassifier {
 					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet);
 				}
 				else{
+					// Reached the end of the path as no child is present
 					pathSet.add(path + "->" + categories.get(j).getName());
 				}
 			}
 		}
+		// If no sub category is found, add the path to pathSet
 		if(!isCat){
 			pathSet.add(path);
 		}
