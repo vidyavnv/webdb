@@ -28,6 +28,8 @@ public class ContentSummary {
              Map<Node<String>, List<String>> map = new HashMap<Node<String>, List<String>>();
             
              BingSearch search = new BingSearch();
+             
+             System.out.println("\nExtracting topic content summaries...");
             
              for(Node<String> node: content) {
                     Set<AppDocument> docs = new HashSet<AppDocument>();
@@ -42,14 +44,23 @@ public class ContentSummary {
                     	}
                     }
                    
-                    for(String query:allQueries) {
-                    		System.out.println("Query is - " + query);
+                    System.out.println("Creating Content Summary for: " + node.getName());
+                    
+                    for(int i=0;i<allQueries.size();i++) {
+                    	String query= allQueries.get(i);
+                    	System.out.println("" + (i+1)+ "/" + allQueries.size());
+                    	if(node.getName().equals("Root")) {
+                    		List<String> completeQuery = MainClass.keyWordsToList(query);
+                    		List<String> trimQuery = completeQuery.subList(1, completeQuery.size());
+                    		query = MainClass.listToKeyWords(trimQuery);
+                    	}
                            List<AppDocument> queryDocs = search.getTop4Results(MainClass.bingAccountKey, MainClass.website, query);
                           
                            for(AppDocument d: queryDocs) {
                                  if(!docs.contains(d)) {
                                         docs.add(d);
                                         Thread.sleep(500);
+                                        System.out.println("\nGetting page: "+ d.getUrl());
                                         Set<String> subWords = GetWordsLynx.runLynx(d.getUrl());
                                         words.addAll(subWords);
                                  }

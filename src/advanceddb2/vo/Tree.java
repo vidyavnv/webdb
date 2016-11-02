@@ -2,7 +2,10 @@ package advanceddb2.vo;
  
 import java.util.ArrayList;
 import java.util.List;
- 
+
+/*
+ * Class to store tree structure
+ */
 public class Tree<T> {
     private Node<T> root;
  

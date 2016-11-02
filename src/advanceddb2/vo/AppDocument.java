@@ -1,5 +1,8 @@
 package advanceddb2.vo;
 
+/*
+ * Class to store Document details returned by Bing 
+ */
 public class AppDocument {
 	private String url;
 	private String title;

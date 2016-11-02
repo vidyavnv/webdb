@@ -32,7 +32,7 @@ public class BingSearch {
 		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
 		String accountKeyEnc = new String(accountKeyBytes);
 
-		System.out.println("Bing web query: " + query);
+	//	System.out.println("Bing web query: " + query);
 		URL url = new URL(query);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
@@ -67,7 +67,7 @@ public class BingSearch {
 		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
 		String accountKeyEnc = new String(accountKeyBytes);
 
-		System.out.println("Bing web query: " + query);
+//		System.out.println("Bing web query: " + query);
 		URL url = new URL(query);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);

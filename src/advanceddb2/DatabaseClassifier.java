@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import advanceddb2.vo.AppDocument;
 import advanceddb2.vo.Tree.Node;
 
 public class DatabaseClassifier { 
 	
-	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet) throws IOException{
+	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet, List<Node<String>> classification) throws IOException{
 				
 		BingSearch search = new BingSearch();
 		int hits;
@@ -32,7 +31,7 @@ public class DatabaseClassifier {
 			List<String> trimQuery = queryList.subList(1, queryList.size());
 			// Join query list to form a string
 			String finalQuery = MainClass.listToKeyWords(trimQuery);
-			System.out.println("Query is - " + finalQuery);
+	//		System.out.println("Query is - " + finalQuery);
 			// Check cache
 			boolean valExists = cache.containsKey(finalQuery);
 			if(valExists){
@@ -61,26 +60,41 @@ public class DatabaseClassifier {
 		}
 		
 		// Print Stats
-		System.out.println("----------------------------------");
-		System.out.println("Statistics\n");
+		if(MainClass.counter ==0) {
+			System.out.println("\nClassifying...");
+			MainClass.counter++;
+		}
 		for(int j=0;j<categories.size();j++){
-			System.out.println("Specificity for category " + categories.get(j).getName() + " is " + specificity.get(j));
-			System.out.println("Coverage for category " + categories.get(j).getName() + " is " + coverage.get(j));
+			System.out.println("Specificity for category: " + categories.get(j).getName() + " is " + specificity.get(j));
+			System.out.println("Coverage for category: " + categories.get(j).getName() + " is " + coverage.get(j));
 		}
 		
 		// Recurse if coverage and specificity are above threshold
-		path = path + "->" + node.getName();
+		if(path != null && !path.isEmpty()) {
+			path = path + "/" + node.getName();
+		} else {
+			path = node.getName();
+		}
+		
 		// Checks if sub category satisfies the threshold conditions
 		boolean isCat = false;
 		for(int j=0;j<categories.size();j++){
 			if(coverage.get(j) > (int)tEc && specificity.get(j) > tEs){
 				isCat = true;
+				
 				if(categories.get(j).hasChildren()){
-					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet);
+					// Add Category with valid coverage and specificity to classification. Will be used in Step 2.
+					// Add Root node as well
+					if(!classification.contains(node)) {
+						classification.add(node);
+					}
+					classification.add(categories.get(j));
+					
+					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet, classification);
 				}
 				else{
 					// Reached the end of the path as no child is present
-					pathSet.add(path + "->" + categories.get(j).getName());
+					pathSet.add(path + "/" + categories.get(j).getName());
 				}
 			}
 		}

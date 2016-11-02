@@ -27,6 +27,8 @@ public class MainClass {
    public static Node<String> computers;
    public static Node<String> health;
    public static Node<String> sports;
+   
+   public static int counter = 0;
  
    /*
    * Main Entry class for the program
@@ -54,16 +56,16 @@ public class MainClass {
              DatabaseClassifier dbClassifier = new DatabaseClassifier();
              String path = "";
              Set<String> pathSet = new HashSet<String>();
-             dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet);
+             // Store final classification
+     		 List<Node<String>> classification = new ArrayList<Node<String>>();
+             dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet, classification);
+             
+             System.out.println("\nClassification:");
              for (String s : pathSet) {
             	    System.out.println(s);
             	}
             
              //Part 2
-             List<Node<String>> classification = new ArrayList<Node<String>>();
-             classification.add(rootNode);
-             classification.add(sports);
-            
              ContentSummary summary = new ContentSummary(classification);
              Map<Node<String>, List<String>> map = summary.getDocumentSamples();
              
@@ -115,6 +117,9 @@ public class MainClass {
           return keys.trim();
    }
   
+   /*
+    * Method to create tree of categories used in the project
+    */
    public static void populateTree() {
           Node<String> hardware = new Node<String>("Hardware");
           Node<String> programming = new Node<String>("Programming");
