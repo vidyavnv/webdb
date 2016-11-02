@@ -46,6 +46,12 @@ public class MainClass {
              tEs = Float.parseFloat(args[1]);
              tEc = Long.parseLong(args[2]);
              website = args[3];
+             
+             // t_es should be between 0 and 1. Else exit
+             if(tEs > 1.0 || tEs < 0) {
+            	 System.out.println("Invalide value for threshold t_es");
+            	 System.exit(0);
+             }
             
              queries = new Queries();
              populateTree();
