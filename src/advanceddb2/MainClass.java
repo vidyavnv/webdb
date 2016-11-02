@@ -65,7 +65,7 @@ public class MainClass {
              for (String s : pathSet) {
             	    System.out.println(s);
             	}
-            
+             
              //Part 2 - Distributed Search Over Web Databases
              ContentSummary summary = new ContentSummary(classification);
              Map<Node<String>, List<String>> map = summary.getDocumentSamples();

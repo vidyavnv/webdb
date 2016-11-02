@@ -78,6 +78,10 @@ public class DatabaseClassifier {
 		if(path != null && !path.isEmpty()) {
 			path = path + "/" + node.getName();
 		} else {
+			// Add Root node to classification
+			if(!classification.contains(node)) {
+				classification.add(node);
+			}
 			path = node.getName();
 		}
 		
@@ -89,10 +93,6 @@ public class DatabaseClassifier {
 				
 				if(categories.get(j).hasChildren()){
 					// Add Category with valid coverage and specificity to classification. Will be used in Step 2.
-					// Add Root node as well
-					if(!classification.contains(node)) {
-						classification.add(node);
-					}
 					classification.add(categories.get(j));
 					
 					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet, classification);
