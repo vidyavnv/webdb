@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
- 
+import java.util.Set;
+
 import advanceddb2.vo.Tree;
 import advanceddb2.vo.Tree.Node;
  
@@ -51,8 +53,11 @@ public class MainClass {
              //Part 1
              DatabaseClassifier dbClassifier = new DatabaseClassifier();
              String path = "";
-             String category = dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache);
-             System.out.println(category);
+             Set<String> pathSet = new HashSet<String>();
+             dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet);
+             for (String s : pathSet) {
+            	    System.out.println(s);
+            	}
             
              //Part 2
              List<Node<String>> classification = new ArrayList<Node<String>>();

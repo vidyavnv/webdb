@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import advanceddb2.vo.AppDocument;
 import advanceddb2.vo.Tree.Node;
 
 public class DatabaseClassifier { 
 	
-	public String qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache) throws IOException{
+	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet) throws IOException{
 				
 		BingSearch search = new BingSearch();
 		int hits;
@@ -76,17 +77,21 @@ public class DatabaseClassifier {
 		
 		// Recurse if coverage and specificity are above threshold
 		path = path + "->" + node.getName();
+		boolean isCat = false;
 		for(int j=0;j<categories.size();j++){
 			if(coverage.get(j) > (int)tEc && specificity.get(j) > tEs){
+				isCat = true;
 				if(categories.get(j).hasChildren()){
-					return qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache);
+					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet);
 				}
 				else{
-					return path + "->" + categories.get(j).getName();
+					pathSet.add(path + "->" + categories.get(j).getName());
 				}
 			}
 		}
-		return path;
+		if(!isCat){
+			pathSet.add(path);
+		}
 	}
 	
 	private List<String> getQueries(String name) {
@@ -112,9 +117,4 @@ public class DatabaseClassifier {
 
 	      return sum;
 	}
-	
-	
-	
-
-
 }
