@@ -39,13 +39,10 @@ public class DatabaseClassifier {
 				hits = cache.get(finalQuery);
 			}
 			else{
-				// Run Bing Search
-				List<AppDocument> docs = search.getResults(MainClass.bingAccountKey, MainClass.website, finalQuery);
-				// Get count of documents fetched from Bing API
-				hits = docs.size();
+				// Run Bing Search and count of results
+				hits = Integer.parseInt(search.getResults(MainClass.bingAccountKey, MainClass.website, finalQuery));
 				cache.put(finalQuery, hits);
 			}
-			System.out.println("hits are " + hits);
 			// Calculate coverage for each category
 			for(int j = 0;j<categories.size();j++){
 				// Check if sub category name is present in original query
@@ -66,13 +63,9 @@ public class DatabaseClassifier {
 		// Print Stats
 		System.out.println("----------------------------------");
 		System.out.println("Statistics\n");
-		System.out.println("Coverage");
 		for(int j=0;j<categories.size();j++){
-			System.out.println(categories.get(j).getName() + "->" + coverage.get(j));
-		}
-		System.out.println("Specificity");
-		for(int j=0;j<categories.size();j++){
-			System.out.println(categories.get(j).getName() + "->" + specificity.get(j));
+			System.out.println("Specificity for category " + categories.get(j).getName() + " is " + specificity.get(j));
+			System.out.println("Coverage for category " + categories.get(j).getName() + " is " + coverage.get(j));
 		}
 		
 		// Recurse if coverage and specificity are above threshold

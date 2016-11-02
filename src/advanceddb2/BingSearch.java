@@ -22,10 +22,10 @@ public class BingSearch {
 	public static String BING_URL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Composite?Query=%27site%3a";
 	public static String EXTRA_PARAMS = "%27&$top=4&$format=JSON";
 	
-	public List<AppDocument> getResults(String accountKey, String site, String searchQuery) throws IOException {
+	public String getResults(String accountKey, String site, String searchQuery) throws IOException {
 		
 		searchQuery = searchQuery.replaceAll(" ", "%20");
-		
+		String webCount = "";
 		List<AppDocument> docs = new ArrayList<AppDocument>();
 		String query=BING_URL + site + "%20" + searchQuery + EXTRA_PARAMS;
 		
@@ -47,26 +47,14 @@ public class BingSearch {
             final JSONObject json = new JSONObject(response.toString());
             final JSONObject d = json.getJSONObject("d");
             final JSONObject resultObj = d.getJSONArray("results").getJSONObject(0);
-            String webCount  = (String) resultObj.get("WebTotal");
-            final JSONArray results = resultObj.getJSONArray("Web");
-            final int resultsLength = results.length();
-            for (int i = 0; i < resultsLength; i++) {
-                final JSONObject aResult = results.getJSONObject(i);
-                
-                AppDocument doc = new AppDocument();
-                doc.setUrl((String) aResult.get("Url"));
-                doc.setTitle((String) aResult.get("Title"));
-                doc.setDescription((String) aResult.get("Description"));
-                
-                docs.add(doc);
-            }
+            webCount  = (String) resultObj.get("WebTotal");
         }
 		catch(Exception ex) {
 			// Catch exception
 			System.out.println("Sorry. An unexpected error occurred while sending request to Bing");
 		}
 		
-		return docs;
+		return webCount;
 	}
 	
 	public List<AppDocument> getTop4Results(String accountKey, String site, String searchQuery) throws IOException {
