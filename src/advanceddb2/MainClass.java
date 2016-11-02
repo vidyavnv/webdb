@@ -1,6 +1,5 @@
 package advanceddb2;
  
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +38,7 @@ public class MainClass {
    * 4 - Website Domain
    */
    public static void main(String[] args) throws Exception {
+	   // If all arguments are not passed, exit the program gracefully
       if(args != null && args.length >= 4) {
                     
              // Assign arguments to corresponding variables
@@ -52,39 +52,25 @@ public class MainClass {
             
              Map<String, Integer> cache = new HashMap<String, Integer>();
              
-             //Part 1
+             //Part 1 - Database Classification
              DatabaseClassifier dbClassifier = new DatabaseClassifier();
              String path = "";
              Set<String> pathSet = new HashSet<String>();
-             // Store final classification
+             // To Store final classification
      		 List<Node<String>> classification = new ArrayList<Node<String>>();
              dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet, classification);
              
-             System.out.println("\nClassification:");
+             // Print Classification
+             System.out.println("\n\nClassification:");
              for (String s : pathSet) {
             	    System.out.println(s);
             	}
             
-             //Part 2
+             //Part 2 - Distributed Search Over Web Databases
              ContentSummary summary = new ContentSummary(classification);
              Map<Node<String>, List<String>> map = summary.getDocumentSamples();
              
-      /*       Map<Node<String>, List<String>> map = new HashMap<Tree.Node<String>, List<String>>();
-             
-             List<String> words = new ArrayList<String>();
-             words.add("aaaa");
-             words.add("a");
-             words.add("bla");
-             words.add("a");
-             words.add("a");
-             words.add("a");
-             words.add("bla");
-             words.add("a");
-             words.add("a");
-             words.add("bla");
-             
-             map.put(rootNode, words);*/
-            
+             // For each node create corresponding document and store content summary
              for(Node<String> node: map.keySet()) {
                     String fileName = node.getName() + "-" + website + ".txt";
                     summary.outputDoc(fileName, map.get(node));

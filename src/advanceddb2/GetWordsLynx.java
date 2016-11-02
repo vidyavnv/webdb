@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+/*
+ * Class to get word count from a document
+ */
 public class GetWordsLynx {
 
     public static Set runLynx(String url) {

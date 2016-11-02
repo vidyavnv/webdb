@@ -9,6 +9,9 @@ import java.util.Set;
 
 import advanceddb2.vo.Tree.Node;
 
+/*
+ * This Class Classifies database 
+ */
 public class DatabaseClassifier { 
 	
 	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet, List<Node<String>> classification) throws IOException{
@@ -24,6 +27,13 @@ public class DatabaseClassifier {
 		List<Integer> coverage = new ArrayList<Integer>(Collections.nCopies(categories.size(), 0));
 		// Initialize specificity with 0s
 		List<Double> specificity = new ArrayList<Double>(Collections.nCopies(categories.size(), 0.0));
+		
+		// Print Stats
+		if(MainClass.counter ==0) {
+			System.out.println("\n\nClassifying...");
+			MainClass.counter++;
+		}
+		
 		for(int i = 0; i<allQueries.size(); i++){
 			// Convert string to list
 			List<String> queryList = MainClass.keyWordsToList(allQueries.get(i));
@@ -59,11 +69,6 @@ public class DatabaseClassifier {
 			specificity.set(j, specVal);
 		}
 		
-		// Print Stats
-		if(MainClass.counter ==0) {
-			System.out.println("\nClassifying...");
-			MainClass.counter++;
-		}
 		for(int j=0;j<categories.size();j++){
 			System.out.println("Specificity for category: " + categories.get(j).getName() + " is " + specificity.get(j));
 			System.out.println("Coverage for category: " + categories.get(j).getName() + " is " + coverage.get(j));

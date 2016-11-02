@@ -20,8 +20,12 @@ import advanceddb2.vo.AppDocument;
 public class BingSearch {
 
 	public static String BING_URL = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Composite?Query=%27site%3a";
-	public static String EXTRA_PARAMS = "%27&$top=4&$format=JSON";
+	public static String BING_URL_2 = "https://api.datamarket.azure.com/Data.ashx/Bing/SearchWeb/v1/Web?Query=%27site%3a";
+	public static String EXTRA_PARAMS = "%27&$top=10&$format=JSON";
 	
+	/*
+	 * Method to fetch Total number of results for each query. Used in Part 1 of application
+	 */
 	public String getResults(String accountKey, String site, String searchQuery) throws IOException {
 		
 		searchQuery = searchQuery.replaceAll(" ", "%20");
@@ -52,17 +56,21 @@ public class BingSearch {
 		catch(Exception ex) {
 			// Catch exception
 			System.out.println("Sorry. An unexpected error occurred while sending request to Bing");
+			ex.printStackTrace();
 		}
 		
 		return webCount;
 	}
 	
+	/*
+	 * Method to fetch Top4 results for each query. Used in Part 2 of application
+	 */
 	public List<AppDocument> getTop4Results(String accountKey, String site, String searchQuery) throws IOException {
 		
 		searchQuery = searchQuery.replaceAll(" ", "%20");
 		
 		List<AppDocument> docs = new ArrayList<AppDocument>();
-		String query=BING_URL + site + "%20" + searchQuery + EXTRA_PARAMS;
+		String query=BING_URL_2 + site + "%20" + searchQuery + EXTRA_PARAMS;
 		
 		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
 		String accountKeyEnc = new String(accountKeyBytes);
@@ -81,10 +89,10 @@ public class BingSearch {
             }
             final JSONObject json = new JSONObject(response.toString());
             final JSONObject d = json.getJSONObject("d");
-            final JSONObject resultObj = d.getJSONArray("results").getJSONObject(0);
-            final JSONArray results = resultObj.getJSONArray("Web");
+            final JSONArray results = d.getJSONArray("results");
             final int resultsLength = results.length();
-            for (int i = 0; i < resultsLength; i++) {
+            final int iterLength = Math.min(4, resultsLength);
+            for (int i = 0; i < iterLength; i++) {
                 final JSONObject aResult = results.getJSONObject(i);
                 AppDocument doc = new AppDocument();
                 doc.setUrl((String) aResult.get("Url"));
@@ -93,7 +101,8 @@ public class BingSearch {
         }
 		catch(Exception ex) {
 			// Catch exception
-			System.out.println("Sorry. An unexpected error occurred while sending request to Bing");
+			System.out.println("Sorry. An unexpected error occurred while sending request to Bing.");
+			ex.printStackTrace();
 		}
 		
 		return docs;
