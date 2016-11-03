@@ -30,7 +30,6 @@ public class BingSearch {
 		
 		searchQuery = searchQuery.replaceAll(" ", "%20");
 		String webCount = "";
-		List<AppDocument> docs = new ArrayList<AppDocument>();
 		String query=BING_URL + site + "%20" + searchQuery + EXTRA_PARAMS;
 		
 		byte[] accountKeyBytes = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());

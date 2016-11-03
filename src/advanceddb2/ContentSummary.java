@@ -64,7 +64,7 @@ public class ContentSummary {
                     	List<String> trimQuery = completeQuery.subList(1, completeQuery.size());
                     	query = MainClass.listToKeyWords(trimQuery);
                     	
-                    	System.out.println("Query is - " + query);
+                   // 	System.out.println("Query is - " + query);
                     	// Get Top4 results for each query
                     	List<AppDocument> queryDocs = search.getTop4Results(MainClass.bingAccountKey, MainClass.website, query);
                       
