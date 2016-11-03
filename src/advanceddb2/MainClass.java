@@ -61,10 +61,11 @@ public class MainClass {
              //Part 1 - Database Classification
              DatabaseClassifier dbClassifier = new DatabaseClassifier();
              String path = "";
+             double specParent = 1.0;
              Set<String> pathSet = new HashSet<String>();
              // To Store final classification
      		 List<Node<String>> classification = new ArrayList<Node<String>>();
-             dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet, classification);
+             dbClassifier.qProber(website, tEc, tEs, rootNode, bingAccountKey, path, cache, pathSet, classification, specParent);
              
              // Print Classification
              System.out.println("\n\nClassification:");

@@ -14,7 +14,7 @@ import advanceddb2.vo.Tree.Node;
  */
 public class DatabaseClassifier { 
 	
-	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet, List<Node<String>> classification) throws IOException{
+	public void qProber(String url, long tEc, float tEs, Node<String> node, String accountKey, String path, Map<String, Integer> cache, Set<String> pathSet, List<Node<String>> classification, double specParent) throws IOException{
 				
 		BingSearch search = new BingSearch();
 		int hits;
@@ -65,7 +65,7 @@ public class DatabaseClassifier {
 		// Calculate specificity for each sub category
 		double totalCoverage = sum(coverage);
 		for(int j = 0;j<categories.size();j++){
-			Double specVal = (double)coverage.get(j)/totalCoverage;
+			Double specVal = (double)coverage.get(j)*specParent/totalCoverage;
 			specificity.set(j, specVal);
 		}
 		
@@ -95,7 +95,7 @@ public class DatabaseClassifier {
 					// Add Category with valid coverage and specificity to classification. Will be used in Step 2.
 					classification.add(categories.get(j));
 					
-					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet, classification);
+					qProber(url, tEc, tEs, categories.get(j),accountKey, path, cache, pathSet, classification, specificity.get(j));
 				}
 				else{
 					// Reached the end of the path as no child is present
